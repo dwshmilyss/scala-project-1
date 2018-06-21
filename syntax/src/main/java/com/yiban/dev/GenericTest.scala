@@ -1,4 +1,4 @@
-package com.yiban.scala.synax
+package com.yiban.dev
 
 import scala.reflect.ClassTag
 

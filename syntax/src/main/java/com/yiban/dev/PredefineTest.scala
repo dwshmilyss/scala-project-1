@@ -1,4 +1,4 @@
-package com.yiban.scala.synax
+package com.yiban.dev
 
 /**
   * Created by duanwei on 2017/3/10.
