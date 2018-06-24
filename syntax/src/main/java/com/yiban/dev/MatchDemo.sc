@@ -75,6 +75,8 @@ object MatchDemo {
   val emptyMap = Map.empty[String, Int]
 
   def seqToString[T](seq: Seq[T]): String = seq match {
+      //这是专门匹配序列的语法。:+ 因为在中间，所以这种写法又叫中缀表达式。
+      //其实这里相当于是调用了:+.unapply
 //    case head +: tail => s"$head +: " + seqToString(tail)
       //上面那句也可以写成这样
     case head +: tail => s"$head +: ${seqToString(tail)}"
@@ -86,6 +88,43 @@ object MatchDemo {
   }{
     println(seqToString(seq = seq))
   }
+
+  /**
+    * 由于函数采用了尾递归调用 所以一定要在方法签名中显式的指定返回值类型
+    * @param seq
+    * @tparam T
+    */
+  def processSeq2[T](seq:Seq[T]) : Unit = seq match {
+      // +:其实是一个object 里面只有一个方法unapply 在scala中有很多符号命名的对象
+    case +:(head,tail) =>
+      printf("%s +: ",head)
+      processSeq2(tail)
+    case Nil => print("Nil\n")
+  }
+  println("=====================")
+  processSeq2(List(1,2,3,4,5))
+
+  println("=====================")
+  val BookExtractorRE = """Book:title=([^,]+),\s+author=(.+)""".r
+  val MagazineExtractorRE = """Magazine:title=([^,]+),\s+issue=(.+)""".r
+
+  val catalog = Seq(
+    "Book:title=scala second edition, author=dean wampler",
+    "Magazine:title=the new yorker, issue=2014 acb",
+    "Unknown:title=who put this there???"
+  )
+
+  for (item <- catalog ) {
+    item match {
+      case BookExtractorRE(title,author) =>
+        println(s"""book "$title,written by $author""")
+      case MagazineExtractorRE(title,issue) =>
+        println(s"""magazine "$title,written by $issue""")
+      case entry => println(s"unknown entry : $entry")
+    }
+
+  }
+
 }
 
 MatchDemo
