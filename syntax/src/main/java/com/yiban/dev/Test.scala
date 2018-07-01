@@ -7,11 +7,11 @@ object Test {
 
   case class WhereIn[T](vals:T*)
 
-  val wheres = Seq()
+  val wheres = Seq(WhereIn(1,2,3),WhereIn("a","b","c"))
   for (where <- wheres) {
     where match {
         //@ _* 匹配case类中的可变参数  注意和集合中的可变参数区分开
-      case WhereIn(vals @ _*) =>
+      case WhereIn(vals @ _*) => println(s"vals = ${vals}")
       case _ => println()
     }
   }
