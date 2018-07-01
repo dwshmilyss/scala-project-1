@@ -1,11 +1,3 @@
-package com.yiban.scala.syntax
-
-import _root_.scala.io.Source
-import scala.util.control.NonFatal
-
-
-
-
 object ExceptionDemo {
   def main(args: Array[String]): Unit = {
     args foreach(arg => contLines(arg))
