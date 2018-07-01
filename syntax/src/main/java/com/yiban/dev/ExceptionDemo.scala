@@ -1,3 +1,8 @@
+package com.yiban.dev
+
+import scala.io.Source
+import scala.util.control.NonFatal
+
 object ExceptionDemo {
   def main(args: Array[String]): Unit = {
     args foreach(arg => contLines(arg))
@@ -38,3 +43,4 @@ object ExceptionDemo {
     }
   }
 }
+
