@@ -1,11 +1,18 @@
 package com.yiban.dev
 
+import scala.io.Source
 import scala.util.parsing.json._
+import java.io.File
 
 object ImplicitDemo {
 
+
+
   /**
     * implicit修饰类的时候不能和case同时使用
+    * 当程序类型检查出现问题的时候，Scala编译器会在两个位置上对出现问题的语句尝试使用隐式转换：
+    * 第一个位置是 “可以直接将某个类型转换为期望的类型” 的地方
+    第二个位置是 “可以将调用方法的对象转换为合适类型” 的地方
     * @param sc
     */
   implicit class JsonForStringContext(val sc:StringContext){
@@ -24,10 +31,23 @@ object ImplicitDemo {
   implicit class Calculator(x:Int){
     def add(second:Int) = x + second;
   }
+
+
+  //隐式方法
+  implicit def file2RichFile(file:File) = new RichFile(file)
+}
+
+class RichFile(val file:File){
+  def read = Source.fromFile(file.getPath).mkString
 }
 
 
+
+
+
 object ImplicitTest{
+
+  //隐式参数
   def calc(amount: Float)(implicit rate: Float) = amount * rate
 
   import ImplicitDemo._
@@ -57,7 +77,10 @@ object ImplicitTest{
     println(jsonObj.isInstanceOf[String])
     println(jsonObj)
 
+    //本来int是没有add方法的，但是由于隐式类的存在
+    println(1.add(100))
 
-    println(1.add(100));
+    println(new File("E:\\input.txt").read)
+
   }
 }
