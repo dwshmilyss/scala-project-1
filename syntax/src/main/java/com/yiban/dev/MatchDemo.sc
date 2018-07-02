@@ -75,34 +75,36 @@ object MatchDemo {
   val emptyMap = Map.empty[String, Int]
 
   def seqToString[T](seq: Seq[T]): String = seq match {
-      //这是专门匹配序列的语法。:+ 因为在中间，所以这种写法又叫中缀表达式。
-      //其实这里相当于是调用了:+.unapply
-//    case head +: tail => s"$head +: " + seqToString(tail)
-      //上面那句也可以写成这样
+    //这是专门匹配序列的语法。:+ 因为在中间，所以这种写法又叫中缀表达式。
+    //其实这里相当于是调用了:+.unapply
+    //    case head +: tail => s"$head +: " + seqToString(tail)
+    //上面那句也可以写成这样
     case head +: tail => s"$head +: ${seqToString(tail)}"
     case Nil => "Nil"
   }
 
   for {
-    seq <- Seq(nonEmptySeq,emptySeq,nonEmptyList,emptyList,nonEmptyVector,emptyVector,nonEmptyMap.toSeq,emptyMap.toSeq)
-  }{
+    seq <- Seq(nonEmptySeq, emptySeq, nonEmptyList, emptyList, nonEmptyVector, emptyVector, nonEmptyMap.toSeq, emptyMap.toSeq)
+  } {
     println(seqToString(seq = seq))
   }
 
   /**
     * 由于函数采用了尾递归调用 所以一定要在方法签名中显式的指定返回值类型
+    *
     * @param seq
     * @tparam T
     */
-  def processSeq2[T](seq:Seq[T]) : Unit = seq match {
-      // +:其实是一个object 里面只有一个方法unapply 在scala中有很多符号命名的对象
-    case +:(head,tail) =>
-      printf("%s +: ",head)
+  def processSeq2[T](seq: Seq[T]): Unit = seq match {
+    // +:其实是一个object 里面只有一个方法unapply 在scala中有很多符号命名的对象
+    case +:(head, tail) =>
+      printf("%s +: ", head)
       processSeq2(tail)
     case Nil => print("Nil\n")
   }
+
   println("=====================")
-  processSeq2(List(1,2,3,4,5))
+  processSeq2(List(1, 2, 3, 4, 5))
 
   println("=====================")
   val BookExtractorRE = """Book:title=([^,]+),\s+author=(.+)""".r
@@ -114,17 +116,55 @@ object MatchDemo {
     "Unknown:title=who put this there???"
   )
 
-  for (item <- catalog ) {
+  for (item <- catalog) {
     item match {
-      case BookExtractorRE(title,author) =>
+      case BookExtractorRE(title, author) =>
         println(s"""book "$title,written by $author""")
-      case MagazineExtractorRE(title,issue) =>
+      case MagazineExtractorRE(title, issue) =>
         println(s"""magazine "$title,written by $issue""")
       case entry => println(s"unknown entry : $entry")
     }
 
   }
 
-}
+  println("==========绑定变量===========")
 
+  case class Address(street: String, city: String, country: String)
+
+  case class Person(name: String, age: Int, address: Address)
+
+  val dw = Person("dw", 20, Address("one", "shanghai", "china"))
+  val bob = Person("bob", 21, Address("two", "beijing", "china"))
+  val james = Person("james", 22, Address("three", "nanjing", "china"))
+
+  for (person <- Seq(dw, bob, james)) {
+    person match {
+      //p @ ...的语法把整个Person对象赋值给变量p
+      case p@Person("dw", 20, address) => println(s"hi dw! ${p}")
+      case p@Person("bob", 21, a@Address(street, city, country)) =>
+        println(s"hi ${p.name} ,age : ${p.age}, in ${a.city}")
+      case p@Person(name, age, _) => println(s"who are you ,$age year-old person named $name? $p")
+    }
+  }
+
+  println("=========匹配泛型集合============")
+  //case语句中无法匹配泛型集合，因为scala也是跑在JVM上的，而运行时JVM会擦除泛型类型
+  //解决方法是：嵌套匹配，首先匹配到集合，然后在内层匹配元素类型
+  def doSeqMatch[T](seq: Seq[T]): String = seq match {
+    case Nil => "Nothing"
+    case head +: _ => head match {
+      case _:Double => "Double"
+      case _:String => "String"
+      case _ => "Unknown"
+    }
+  }
+
+  val res = for (item <- Seq(List(1.1, 2.2, 3.3), List("a", "b"), Nil)) yield{
+    item match {
+      case seq:Seq[_] => (s"seq ${doSeqMatch(seq)}",seq)
+      case _ => ("unknown!",item)
+    }
+  }
+  println(res)
+}
 MatchDemo
