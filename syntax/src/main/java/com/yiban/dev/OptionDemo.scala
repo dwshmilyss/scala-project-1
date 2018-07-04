@@ -85,10 +85,10 @@ object OptionDemo {
     /**
       * 利用第三方库实现positive()
       */
-    import scalaz._,std.AllInstances._
-    import scalaz.ValidationFlatMap
+    import scalaz._,Scalaz._
+    import Validation.FlatMap._
     //这里的Validation 其实和Either还有Try的功能都一样 都会在第一个错误出现时阻断后续执行
-    def positive(i: Int): Validation[List[String],Int] = {
+    def positive4(i: Int): Validation[List[String],Int] = {
       if(i > 0) Success(i)
       else Failure(List(s"no positive number : $i"))
     }
@@ -96,15 +96,15 @@ object OptionDemo {
 
 
     val res2 = for {
-      i1 <- positive(5)
-      i2 <- positive(-1 * i1) //这里如果执行为None 是会阻断的 下面的子句不会执行
-      i3 <- positive(10 * i2)
-      i4 <- positive(-2 * i3)
+      i1 <- positive4(5)
+      i2 <- positive4(-1 * i1) //这里如果执行为None 是会阻断的 下面的子句不会执行
+      i3 <- positive4(10 * i2)
+      i4 <- positive4(-2 * i3)
     } yield (i1 + i2 + i3 + i4)
-//
-//    println(res2)
 
-//    positive4(5) +++ positive4(-10) +++ positive4(25) +++ positive4(-30)
+    println(res2)
+
+    println(positive4(5) +++ positive4(-10) +++ positive4(25) +++ positive4(-30))
 
   }
 }
