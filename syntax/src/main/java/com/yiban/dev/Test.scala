@@ -22,6 +22,21 @@ object Test {
     println(a)
   }
 
+  def testRequires(i:Int) = {
+    /**
+      * Exception in thread "main" java.lang.IllegalArgumentException: requirement failed: i:-1 must be non negative
+      */
+    require(i>0,s"i:$i must be non negative")
+    /**
+      * Exception in thread "main" java.lang.AssertionError: assertion failed: i:-1 must be non negative
+      */
+    //    assert(i>0,s"i:$i must be non negative")
+    /**
+      * 以上两者都会中断程序 抛出异常 只是抛出的异常类型不一样而已
+      */
+    println("sssss")
+  }
+
   def main(args: Array[String]): Unit = {
     val map = Map("one" -> 1, "two" -> 2, "three" -> 3)
     val emptyList = Nil
@@ -45,5 +60,10 @@ object Test {
     } catch {
       case ex: ArithmeticException => println(ex.getMessage)
     }
+
+    var a : Char = '中'
+
+    testRequires(-1)
+
   }
 }
