@@ -45,5 +45,11 @@ object Test {
     } catch {
       case ex: ArithmeticException => println(ex.getMessage)
     }
+
+    case class A(var a:String)
+    val a1 = A("aa")
+    val b1 = A.apply("bb")
+    println(a1)
+    println(b1)
   }
 }
