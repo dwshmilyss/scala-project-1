@@ -52,4 +52,18 @@ object ClassDemo {
     override def toString()=""+head
   }
 
+
+  /**
+    * self不是关键字,是this的别名,具有更强的可读性,无代码中的outer =>
+    */
+  class Self {
+    self =>
+    val tmp = "Scala"
+    def foo = self.tmp + this.tmp //可以用self和this访问自身成员
+  }
+
+  trait S1
+
+  class S2 { this:S1 => }
+
 }
