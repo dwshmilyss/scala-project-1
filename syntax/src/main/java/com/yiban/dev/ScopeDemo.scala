@@ -34,4 +34,26 @@ package scopeA {
     private[scopeA] val scopeA_privateField = 1
   }
 
+  class PrivateClass1(private[PrivateClass1] val privateField1: Int) {
+    private[PrivateClass1] val privateField2 = 1
+
+    def equalFields(other: PrivateClass1) =
+      (privateField1 == other.privateField1) &&
+        (privateField2 == other.privateField2) &&
+        (nested == other.nested)
+
+    class Nested {
+      private[Nested] val nestedField = 1
+    }
+
+    /**
+      * private[Class]没有private[this]那么严格
+      * Class只要在类的作用域内都可以编译通过
+      */
+    //    val nestedNested = nested.nestedField
+
+
+    private[PrivateClass1] val nested = new Nested
+  }
+
 }
