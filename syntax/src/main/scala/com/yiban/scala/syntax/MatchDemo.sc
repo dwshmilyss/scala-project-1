@@ -1,3 +1,5 @@
+import scala.collection.{Iterator, Seq}
+
 /**
   * match一般都要有一个default，以免漏匹配
   * match也可以返回一个值，编译器会推断所有case子句的返回值类型的最近公共父类型作为返回值类型
@@ -115,7 +117,7 @@ object MatchDemo {
     "Magazine:title=the new yorker, issue=2014 acb",
     "Unknown:title=who put this there???"
   )
-
+    println(1111)
   for (item <- catalog) {
     item match {
       case BookExtractorRE(title, author) =>
@@ -123,9 +125,12 @@ object MatchDemo {
       case MagazineExtractorRE(title, issue) =>
         println(s"""magazine "$title,written by $issue""")
       case entry => println(s"unknown entry : $entry")
+      case _ => "Unknown"
     }
 
   }
+
+  println(22222)
 
   println("==========绑定变量===========")
 
@@ -166,5 +171,36 @@ object MatchDemo {
     }
   }
   println(res)
+
+
+  println("=============== 匹配可变参数 ==================")
+  case class WhereIn[T](vals: T*)
+  val wheres = Seq(WhereIn(1, 2, 3, 4), WhereIn("a", "b", "c"))
+  for (where <- wheres) {
+    where match {
+      //@ _* 匹配case类中的可变参数  注意和下面集合中的可变参数区分开
+      case WhereIn(vals@_*) => println(vals)
+      case _ => println(None)
+    }
+  }
+
+  println("-----------------------")
+  val map = Map("one" -> 1, "two" -> 2, "three" -> 3)
+  val list = List(1, 2, 3, 4, 5)
+
+  def windows[T](seq: Seq[T]): String = seq match {
+    //匹配集合中不确定的元素个数时用 _* 表示一个或多个  注意和case类中的可变参数区分开
+    case Seq(head1, head2, _*) =>
+      s"($head1,$head2), " + windows(seq.tail)
+    case Seq(head, _*) =>
+      s"($head,_), " + windows(seq.tail)
+    case Nil => "Nil"
+  }
+
+  for (seq <- Seq(list, emptyList, map.toSeq)) {
+    println(windows(seq))
+  }
+
+  println("================ end ======================")
 }
 MatchDemo

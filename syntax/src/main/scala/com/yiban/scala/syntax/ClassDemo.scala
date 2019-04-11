@@ -1,4 +1,4 @@
-package com.yiban.dev
+package com.yiban.scala.syntax
 
 object ClassDemo {
 

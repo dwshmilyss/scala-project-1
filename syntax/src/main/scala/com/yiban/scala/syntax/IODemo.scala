@@ -1,6 +1,6 @@
-package com.yiban.dev
+package com.yiban.scala.syntax
 
-import java.io.{FileInputStream, FileWriter, FileOutputStream}
+import java.io.{FileInputStream, FileOutputStream, FileWriter}
 import java.nio.ByteBuffer
 
 import scala.io.Source
@@ -28,7 +28,8 @@ object IODemo {
     inC transferTo (0, inC.size, outC)
 
     //网络IO
-    import java.net.{URL, URLEncoder}
+    import java.net.URL
+
     import scala.io.Source.fromURL
     println(fromURL(new URL("http://www.baidu.com")).mkString)
 //    或者指定编码：

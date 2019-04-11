@@ -1,4 +1,4 @@
-package com.yiban.dev
+package com.yiban.scala.syntax
 
 import scala.util.Try
 
@@ -85,7 +85,8 @@ object OptionDemo {
     /**
       * 利用第三方库实现positive()
       */
-    import scalaz._,Scalaz._
+    import scalaz._
+    import Scalaz._
     import Validation.FlatMap._
     //这里的Validation 其实和Either还有Try的功能都一样 都会在第一个错误出现时阻断后续执行
     def positive4(i: Int): Validation[List[String],Int] = {

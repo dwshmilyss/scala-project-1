@@ -1,4 +1,4 @@
-package com.yiban.dev
+package com.yiban.scala.syntax
 
 import scala.io.Source
 import scala.util.control.NonFatal
@@ -43,4 +43,3 @@ object ExceptionDemo {
     }
   }
 }
-

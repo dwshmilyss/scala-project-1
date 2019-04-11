@@ -1,4 +1,4 @@
-package com.yiban.dev
+package com.yiban.scala.syntax
 
 /**
   * Created by duanwei on 2017/3/10.

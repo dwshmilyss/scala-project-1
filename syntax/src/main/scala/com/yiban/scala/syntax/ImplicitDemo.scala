@@ -1,8 +1,9 @@
-package com.yiban.dev
+package com.yiban.scala.syntax
+
+import java.io.File
 
 import scala.io.Source
 import scala.util.parsing.json._
-import java.io.File
 
 object ImplicitDemo {
 
