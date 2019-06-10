@@ -1,6 +1,26 @@
 package com.yiban.scala.syntax
 
+import com.yiban.scala.syntax
+
+import scala.beans.BeanProperty
+
 object ClassDemo {
+
+  def main(args: Array[String]) {
+    val a = new A("dw", 18)
+    a.age = 19
+
+    val counter = new Counter
+    counter.setValue(1)
+    println(counter.getValue)
+    counter.newVal = 1
+
+    val man = new syntax.Person("aa",20)
+    val woman = new syntax.Person("bb",18)
+
+    new man.Man("male")
+    new woman.Man("female")
+  }
 
   class Name(s: String) {
     private var _value: String = s
@@ -11,12 +31,6 @@ object ClassDemo {
   }
 
   class A(val name: String, var age: Int)
-
-  def main(args: Array[String]) {
-    val a = new A("dw", 18)
-    a.age = 19
-  }
-
 
   /*==========继承的方式===========*/
   /**
@@ -109,5 +123,67 @@ object ClassDemo {
     * 但A, B仍是两种类型，它们的type对象是不同的。
     */
   typeOf[A.type] <:< typeOf[T]
+}
+class Counter{
+  //如果成员变量是private 则scala会自动生成private的getter和setter，这时需要手动生成
+  private var value = 0
+  //用下划线代替默认值时必须指定类型
+  var newVal : Int = _
+  var str : String = _
+  def increment() {value += 1}
 
+  private [this] var priValue = 0
+
+  //获取值时不用写括号
+  def getValue = value
+  def setValue(a : Int) = value = a
+
+  this.priValue
+
+  @BeanProperty var name : String = _
+}
+
+//私有字段 公有的getter和setter
+class Person(val name : String,val age :Int){
+  outer =>
+  class Woman (val gender:String){
+    println("gender is "+gender+" name is "+outer.name+" age is "+outer.age)
+  }
+
+  class Man (val gender:String){
+    println("gender is "+gender+" name is "+name+" age is "+age)
+  }
+
+  println(" name is "+name+" age is "+age)
+}
+
+//等价于 private[this] name 和 private[this] age
+class Student(name : String,age :Int){
+
+}
+
+//私有字段 私有的getter和setter
+class Teacher(private val name : String,private val age :Int){
+
+}
+
+//私有字段 私有的getter和setter
+class Professor(@BeanProperty val name : String, @BeanProperty val age :Int){
+
+}
+
+
+class Account {
+  private var balance = 0.0
+  private[this] val id = 0
+  //访问伴生对象的方法时必须用 伴生对象.方法() 才可以
+  Account.test()
+}
+
+object Account{
+  val account = new Account()
+  //可以访问伴生类的私有成员 但不能访问伴生类的私有对象成员
+  account.balance
+
+  def test() = println("object account")
 }
