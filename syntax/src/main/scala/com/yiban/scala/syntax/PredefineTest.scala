@@ -13,6 +13,6 @@ object PredefineTest {
 
     println("hello".isInstanceOf[String])
 
-    classOf[String]
+    println(classOf[String])
   }
 }

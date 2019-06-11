@@ -15,11 +15,32 @@ object ClassDemo {
     println(counter.getValue)
     counter.newVal = 1
 
-    val man = new syntax.Person("aa",20)
-    val woman = new syntax.Person("bb",18)
+    val man = new syntax.Person("aa", 20)
+    val woman = new syntax.Person("bb", 18)
 
     new man.Man("male")
     new woman.Man("female")
+
+    /**
+      * 协变 方法中的泛型参数类型必须是A 的父类
+      * 因为要满足里氏替换原则 即 p2 = p1 (父类可以赋值给子类)
+      * 逆变则刚好相反 泛型参数类型必须是A类型的子类
+      * @tparam A
+      */
+    class Test[+A]{def test[B>:A](p:B){}}
+    var p1 = new Test[Int]
+    var p2 = new Test[AnyVal]
+    p1.test(123)
+    p2 = p1
+
+    val name = Name("dw")
+    println(name.value)
+    println("---------------")
+    val name1 = null
+    name1 match {
+      case Name(s) => println(s)
+      case _ => println("None")
+    }
   }
 
   class Name(s: String) {
@@ -28,6 +49,18 @@ object ClassDemo {
     def value: String = _value
 
     def value_=(newValue: String) = _value = newValue
+  }
+
+  object Name{
+    def apply(s: String): Name = new Name(s)
+
+    def unapply(name: Name): Option[String] = {
+      if (name == null) {
+        None
+      }else{
+        Some(name.value)
+      }
+    }
   }
 
   class A(val name: String, var age: Int)
@@ -101,11 +134,12 @@ object ClassDemo {
 
   /**
     * 测试 =:=  <%<  <:<
-    *  A =:= B means A must be exactly B
-       A <:< B means A must be a subtype of B (analogous to the simple type constraint <:)
-       A <%< B means A must be viewable as B, possibly via implicit conversion (analogous to the simple type constraint <%)
+    * A =:= B means A must be exactly B
+    * A <:< B means A must be a subtype of B (analogous to the simple type constraint <:)
+    * A <%< B means A must be viewable as B, possibly via implicit conversion (analogous to the simple type constraint <%)
     *
     */
+
   import scala.reflect.runtime.universe.typeOf
 
   type T = Serializable {
@@ -115,6 +149,7 @@ object ClassDemo {
 
   object A extends Serializable {
     type X = String;
+
     def foo() {}
   }
 
@@ -124,51 +159,57 @@ object ClassDemo {
     */
   typeOf[A.type] <:< typeOf[T]
 }
-class Counter{
+
+class Counter {
   //如果成员变量是private 则scala会自动生成private的getter和setter，这时需要手动生成
   private var value = 0
   //用下划线代替默认值时必须指定类型
-  var newVal : Int = _
-  var str : String = _
-  def increment() {value += 1}
+  var newVal: Int = _
+  var str: String = _
 
-  private [this] var priValue = 0
+  def increment() {
+    value += 1
+  }
+
+  private[this] var priValue = 0
 
   //获取值时不用写括号
   def getValue = value
-  def setValue(a : Int) = value = a
+
+  def setValue(a: Int) = value = a
 
   this.priValue
 
-  @BeanProperty var name : String = _
+  @BeanProperty var name: String = _
 }
 
 //私有字段 公有的getter和setter
-class Person(val name : String,val age :Int){
+class Person(val name: String, val age: Int) {
   outer =>
-  class Woman (val gender:String){
-    println("gender is "+gender+" name is "+outer.name+" age is "+outer.age)
+
+  class Woman(val gender: String) {
+    println("gender is " + gender + " name is " + outer.name + " age is " + outer.age)
   }
 
-  class Man (val gender:String){
-    println("gender is "+gender+" name is "+name+" age is "+age)
+  class Man(val gender: String) {
+    println("gender is " + gender + " name is " + name + " age is " + age)
   }
 
-  println(" name is "+name+" age is "+age)
+  println(" name is " + name + " age is " + age)
 }
 
 //等价于 private[this] name 和 private[this] age
-class Student(name : String,age :Int){
+class Student(name: String, age: Int) {
 
 }
 
 //私有字段 私有的getter和setter
-class Teacher(private val name : String,private val age :Int){
+class Teacher(private val name: String, private val age: Int) {
 
 }
 
 //私有字段 私有的getter和setter
-class Professor(@BeanProperty val name : String, @BeanProperty val age :Int){
+class Professor(@BeanProperty val name: String, @BeanProperty val age: Int) {
 
 }
 
@@ -180,7 +221,7 @@ class Account {
   Account.test()
 }
 
-object Account{
+object Account {
   val account = new Account()
   //可以访问伴生类的私有成员 但不能访问伴生类的私有对象成员
   account.balance

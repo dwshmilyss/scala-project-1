@@ -17,9 +17,14 @@ object CollectionTest {
 //    val scalaList = javaList.asScala
 //    for (i <- scalaList) println(i)
 //    for (i <- javaList) println(i)
-    s2j()
+//    s2j()
 
-
+    val list = List(1, 2, 3, 4, 5)
+    println(list.head)
+    println("===========")
+    println(list.tail)
+    println(list.tail.head)
+    println(list.tail.tail)
   }
 
   def j2s():Unit = {

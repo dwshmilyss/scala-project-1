@@ -1,5 +1,7 @@
 package com.yiban.scala.syntax
 
+import scala.collection.Seq
+
 /**
   * Created by 10000347 on 2016/5/31.
   */
@@ -88,4 +90,21 @@ object SwitchTest extends App{
     com
   }
   println(compose(g1,g2)(2))
+
+  val emptyList = Nil
+  val map = Map("one" -> 1, "two" -> 2, "three" -> 3)
+  val list = List(1, 2, 3, 4, 5)
+
+  def windows[T](seq: Seq[T]): String = seq match {
+    //匹配集合中不确定的元素个数时用 _* 表示一个或多个  注意和case类中的可变参数区分开
+    case Seq(head1, head2, _*) =>
+      s"($head1,$head2), " + windows(seq.tail)
+    case Seq(head, _*) =>
+      s"($head,_), " + windows(seq.tail)
+    case Nil => "Nil"
+  }
+
+  for (seq <- Seq(list, emptyList, map.toSeq)) {
+    println(windows(seq))
+  }
 }

@@ -22,6 +22,9 @@ object PartialFuncTeset {
     case x => x - 1
   }
 
+
+  val test: PartialFunction[Int,Int] = {case a:Int => a+1}
+
   def main(args: Array[String]) {
     println(signal(-2))
     println(signal(2))
@@ -31,5 +34,7 @@ object PartialFuncTeset {
     println(composed_signal(0))
     println(composed_signal(2))
     println(composed_signal(-2))
+
+    println(test(3))
   }
 }
