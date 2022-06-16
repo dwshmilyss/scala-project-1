@@ -1,6 +1,6 @@
-package com.yiban.syntax.test
+package com.yiban.syntax.test.junit4
 
-import org.junit.{Assert, Test}
+import org.junit.{After, AfterClass, Assert, Before, BeforeClass, Test}
 
 import scala.collection.Seq
 
@@ -11,6 +11,21 @@ class JunitTest extends Assert{
   val list = List(1, 2, 3, 4, 5)
   val emptyList = Nil
 
+  /**
+   * 每个测试方法开始前执行一次
+   */
+  @Before
+  def before():Unit = {
+    println("before")
+  }
+
+  /**
+   * 每个测试方法结束后执行一次
+   */
+  @After
+  def after():Unit = {
+    println("after")
+  }
 
   @Test
   def test1 = {
@@ -32,5 +47,23 @@ class JunitTest extends Assert{
   @Test
   def test2={
     println("aaa")
+  }
+}
+
+object JunitTest {
+  /**
+   * 所有测试方法开始前只执行一次
+   */
+  @BeforeClass
+  def setup() : Unit = {
+    println("only execute once before all test method");
+  }
+
+  /**
+   * 所有测试方法结束后只执行一次
+   */
+  @AfterClass
+  def down() : Unit = {
+    println("only execute once after all test method");
   }
 }
